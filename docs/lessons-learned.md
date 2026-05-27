@@ -12,6 +12,10 @@
 
 The Linux `ntfs3` `force` option can be useful as a short-term emergency recovery tool, but it should not be a steady-state mount option for a dirty NTFS volume. The correct durable fix is to repair the filesystem with Windows, then remove `force` and verify a clean Linux mount.
 
+## Power-Loss Context
+
+Apartment power outages were the likely trigger for the dirty NTFS state. For hosts that depend on external storage, clean shutdown behavior, backup freshness, and boot-safe mount options matter as much as the filesystem repair itself.
+
 ## What Stayed In Place
 
 The following `/etc/fstab` hardening remains intentional:

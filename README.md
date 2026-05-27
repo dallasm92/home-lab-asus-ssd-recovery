@@ -4,7 +4,7 @@ Operational case study for safely repairing a dirty NTFS external SSD used by an
 
 ## Summary
 
-The ASUS server previously depended on an external NTFS SSD mounted at `/mnt/externalssd`, with an Immich bind mount under `/DATA/Gallery/immich`. After a power-loss event, Linux restored service with `ntfsfix`, but the disk still needed a proper Windows `chkdsk` repair. To avoid repeat emergency-boot risk, the server had temporarily used `force,nofail,x-systemd.device-timeout=10` in `/etc/fstab`.
+The ASUS server previously depended on an external NTFS SSD mounted at `/mnt/externalssd`, with an Immich bind mount under `/DATA/Gallery/immich`. After apartment power outages likely interrupted writes to the disk, Linux restored service with `ntfsfix`, but the volume still needed a native Windows `chkdsk` repair. To avoid repeat emergency-boot risk, the server had temporarily used `force,nofail,x-systemd.device-timeout=10` in `/etc/fstab`.
 
 On `2026-05-27`, the disk was repaired with Windows `chkdsk E: /f`, returned to ASUS, and validated after removing the temporary `force` mount option.
 
@@ -47,6 +47,8 @@ The repair was intentionally sequenced to avoid data loss:
 8. Boot ASUS and validate service recovery.
 9. Remove the temporary Linux `force` mount option.
 10. Reboot ASUS again and validate a clean mount without `force`.
+
+Power loss was treated as the likely trigger, so the repair included both filesystem cleanup and boot-resilience validation instead of stopping at a one-time disk scan.
 
 See [docs/recovery-runbook.md](docs/recovery-runbook.md) for the exact command flow.
 
